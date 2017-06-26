@@ -4,6 +4,14 @@ import sys
 
 from optparse import OptionParser
 
+parser = OptionParser()
+
+parser.add_option('-f', action = 'store_true', help = 'One or more blocklist files to simplify')
+parser.add_option('-u', action = 'store_true', help = 'One or more blocklist urls to simplify')
+
+(options, args) = parser.parse_args()
+
+
 # TODO: user optparse to parse options
 
 class Node(object):
@@ -36,40 +44,37 @@ def add_url(root, url):
 	current.children = dict()
 
 
-def print_list(root):
 
-	stack = list()
-	lst = str()
+def print_list(current, path):
 
-	stack.append(root)
+	if len(current.children) == 0:
+		return path 
 
-	while len(stack) > 0:
-		current = stack.pop()
+	p = str()
 
-		lst += current.auth
 
-		if len(current.children) > 0:
-			lst += '.'
-			stack.append(current.children.values())
-		else:
-			lst += '\n'
+	for i in current.children.values():
 
-	return lst
+		p += print_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
 
+	return p
 
 if __name__ == "__main__":
+
+	if options.f and options.u:
+	    parser.error("options -f and -u are mutually exclusive")
+
 	root = Node('.')
 
-	with open(sys.argv[1]) as f:
-		lines = f.readlines()
+	if options.f:
+		for file in sys.stdin:
+			with open(file.strip()) as f:
+				lines = f.readlines()
+			lines = [x.strip() for x in lines]
+			for i in lines:
+				add_url(root, i)
 
-	lines = [x.strip() for x in lines]
-
-
-	for i in lines:
-		add_url(root, i)
-
-	print print_list(root)
+	print print_list(root, '\n')
 
 
 

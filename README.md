@@ -7,12 +7,12 @@ May be useful for host blocking software, to simplify/compress blocklists from v
 
 This was implemented using a tree, as follows:
 
-.
-├─ com
-│  ├─ ads
-│  └─ malware
-├─ net
-│  ├─ a8
-│  └─ a2dfp
-└─ xyz
-   └─ fwdbreuse
+.<br>
+├─ com<br>
+│  ├─ ads<br>
+│  └─ malware<br>
+├─ net<br>
+│  ├─ a8<br>
+│  └─ a2dfp<br>
+└─ xyz<br>
+   └─ fwdbreuse<br>

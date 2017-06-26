@@ -35,19 +35,27 @@ def add_url(root, url):
 
 	current.children = dict()
 
-def print_list(current, path):
 
-	if len(current.children) == 0:
-		return path 
+def print_list(root):
 
-	p = str()
+	stack = list()
+	lst = str()
 
+	stack.append(root)
 
-	for i in current.children.values():
+	while len(stack) > 0:
+		current = stack.pop()
 
-		p += print_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
+		lst += current.auth
 
-	return p
+		if len(current.children) > 0:
+			lst += '.'
+			stack.append(current.children.values())
+		else:
+			lst += '\n'
+
+	return lst
+
 
 if __name__ == "__main__":
 	root = Node('.')
@@ -61,7 +69,7 @@ if __name__ == "__main__":
 	for i in lines:
 		add_url(root, i)
 
-	print print_list(root, '\n')
+	print print_list(root)
 
 
 

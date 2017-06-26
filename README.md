@@ -8,19 +8,11 @@ May be useful for host blocking software, to simplify/compress blocklists from v
 This was implemented using a tree, as follows:
 
 .
-
 ├─ com
-
 │  ├─ ads
-
 │  └─ malware
-
 ├─ net
-
 │  ├─ a8
-
 │  └─ a2dfp
-
 └─ xyz
-
    └─ fwdbreuse

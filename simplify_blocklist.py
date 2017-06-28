@@ -12,15 +12,35 @@ parser.add_option('-u', action = 'store_true', help = 'One or more blocklist url
 (options, args) = parser.parse_args()
 
 
-# TODO: user optparse to parse options
-
 class Node(object):
+	""" Node
+	
+	Attributes:
+		auth (str): The authority of this Node.
+		children (dict of Node): The children of this Node.
+	"""
 
 	def __init__(self, auth):
+		""" Constructor
+
+        Args:
+            auth (str): The authority of the current node.
+
+		"""
 		self.auth = auth
 		self.children = None;
 
+
 	def add_children(self, auth):
+		""" Adds a new node for auth if none already exists
+
+		Args:
+			auth (str): The authority of the child node
+
+		Returns:
+			Node: The node added or the previously existing node
+		"""
+
 		if self.children is None:
 			self.children = dict()
 
@@ -31,6 +51,14 @@ class Node(object):
 
 
 def add_url(root, url):
+	"""Adds a new url to the tree with root root
+
+	Args:
+		root (Node): The root of the hosts tree.
+		url (str): The URL to be added.
+
+	"""
+
 	url = url.split('.')
 
 	current = root
@@ -45,21 +73,31 @@ def add_url(root, url):
 
 
 
-def print_list(current, path):
+def to_string(current, path):
+	"""
+
+	Args:
+		current (Node): The root of the subtree.
+		path (str): path from the root to the current Node.
+
+	Returns:
+		str: The list representation of the hosts in current
+
+	"""
 
 	if len(current.children) == 0:
 		return path 
 
 	p = str()
 
-
 	for i in current.children.values():
 
-		p += print_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
+		p += to_string(i, i.auth + '.' + path if path != '\n' else i.auth + path)
 
 	return p
 
-if __name__ == "__main__":
+
+def main():
 
 	if options.f and options.u:
 	    parser.error("options -f and -u are mutually exclusive")
@@ -74,7 +112,11 @@ if __name__ == "__main__":
 			for i in lines:
 				add_url(root, i)
 
-	print print_list(root, '\n')
+	print to_string(root, '\n')
+
+if __name__ == "__main__":
+	main()
+
 
 
 

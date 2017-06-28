@@ -110,15 +110,19 @@ def tree_as_tree(root):
 
 	stack.append((root, 0))
 
+	p = str()
+
 	while len(stack) > 0:
 		current, depth = stack.pop()
 
 		for _ in range(depth):
-			print '#',
+			p += '# '
 
-		print current.auth
+		p += current.auth + '\n'
 
 		stack.extend([(x, depth + 1) for x in current.children.values()])
+
+	return p
 
 
 

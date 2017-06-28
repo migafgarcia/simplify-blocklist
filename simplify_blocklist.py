@@ -14,7 +14,7 @@ parser.add_option('-u', action = 'store_true', help = 'One or more blocklist url
 
 class Node(object):
 	""" Node
-	
+
 	Attributes:
 		auth (str): The authority of this Node.
 		children (dict of Node): The children of this Node.
@@ -23,8 +23,8 @@ class Node(object):
 	def __init__(self, auth):
 		""" Constructor
 
-        Args:
-            auth (str): The authority of the current node.
+		Args:
+			auth (str): The authority of the current node.
 
 		"""
 		self.auth = auth
@@ -51,7 +51,7 @@ class Node(object):
 
 
 def add_url(root, url):
-	"""Adds a new url to the tree with root root
+	""" Adds a new url to the tree with root root
 
 	Args:
 		root (Node): The root of the hosts tree.
@@ -73,7 +73,7 @@ def add_url(root, url):
 
 
 
-def to_string(current, path):
+def tree_as_list(current, path):
 	"""
 
 	Args:
@@ -92,9 +92,34 @@ def to_string(current, path):
 
 	for i in current.children.values():
 
-		p += to_string(i, i.auth + '.' + path if path != '\n' else i.auth + path)
+		p += tree_as_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
 
 	return p
+
+def tree_as_tree(root):
+	"""
+
+	Args:
+		root (Node): The root of the tree.
+
+	Returns:
+		str: The tree representation of the hosts in root
+
+	"""
+	stack = list()
+
+	stack.append((root, 0))
+
+	while len(stack) > 0:
+		current, depth = stack.pop()
+
+		for _ in range(depth):
+			print '#',
+
+		print current.auth
+
+		stack.extend([(x, depth + 1) for x in current.children.values()])
+
 
 
 def main():
@@ -112,7 +137,7 @@ def main():
 			for i in lines:
 				add_url(root, i)
 
-	print to_string(root, '\n')
+	print tree_as_list(root, '\n')
 
 if __name__ == "__main__":
 	main()

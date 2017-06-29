@@ -73,7 +73,7 @@ def add_url(root, url):
 
 
 
-def tree_as_list(current, path):
+def tree_as_host_list(current, path):
 	"""
 
 	Args:
@@ -92,7 +92,7 @@ def tree_as_list(current, path):
 
 	for i in current.children.values():
 
-		p += tree_as_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
+		p += tree_as_host_list(i, i.auth + '.' + path if path != '\n' else i.auth + path)
 
 	return p
 
@@ -125,23 +125,58 @@ def tree_as_tree(root):
 	return p
 
 
+def from_files():
+	"""
+
+	Reads filenames from stdin, opens them and builds the tree
+		
+	"""
+	root = Node('.')
+
+	for file in sys.stdin:
+		with open(file.strip()) as f:
+			lines = f.readlines()
+		lines = [x.strip() for x in lines]
+		for i in lines:
+			add_url(root, i)
+
+	print tree_as_host_list(root, '\n')
+
+def from_urls():
+	"""
+
+	Reads urls from stdin, opens them and builds the tree
+		
+	"""
+	print("Read from urls not yet implemented")
+
+def from_input():
+	"""
+
+	Reads blocklist from stdin and builds the tree
+		
+	"""
+	root = Node('.')
+
+	for url in sys.stdin:
+		add_url(root, url.strip())
+
+	print tree_as_host_list(root, '\n')
+
 
 def main():
 
 	if options.f and options.u:
 	    parser.error("options -f and -u are mutually exclusive")
 
-	root = Node('.')
-
 	if options.f:
-		for file in sys.stdin:
-			with open(file.strip()) as f:
-				lines = f.readlines()
-			lines = [x.strip() for x in lines]
-			for i in lines:
-				add_url(root, i)
+		from_files()
+	elif options.u:
+		from_urls()
+	else:
+		from_input()
 
-	print tree_as_list(root, '\n')
+
 
 if __name__ == "__main__":
 	main()
